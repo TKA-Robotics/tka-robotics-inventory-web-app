@@ -1,6 +1,6 @@
 # TKA Robotics Inventory System
 
-You can view the live application [here](http://robotdbwebapp.azurewebsites.net).
+You can view the live application at [tkarobotics.azurewebsites.net](http://tkarobotics.azurewebsites.net).
 
 ## About
 
