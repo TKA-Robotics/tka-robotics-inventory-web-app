@@ -12,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using DotNetCoreSqlDb.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotNetCoreSqlDb
 {
@@ -28,11 +30,39 @@ namespace DotNetCoreSqlDb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            // services.AddDbContext<MyDatabaseContext>(options => options.UseSqlServer("Server=tcp:robotdbtestserver.database.windows.net,1433;Database=coreDB;User ID=jatler;Password=TKA_R0bot1c$_db;Encrypt=true;Connection Timeout=30;"));
+            // new password: TKA_R0bot1c$_db
+
             services.AddDbContext<MyDatabaseContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
 
+            services.AddIdentity<IdentityUser, IdentityRole>(config =>
+            {
+                config.Password.RequiredLength = 4;
+                config.Password.RequireDigit = false;
+                config.Password.RequireNonAlphanumeric = false;
+                config.Password.RequireUppercase = false;
 
-            //services.AddDbContext<MyDatabaseContext>(options => options.UseSqlServer("Server=tcp:tkainventoryserver.database.windows.net,1433;Database=coreDB;User ID=tka;Password=M1dKnightRobotic$;Encrypt=true;Connection Timeout=30;"));
+                // config.SignIn.RequireConfirmedAccount = true;
+            } 
+            ).AddRoles<IdentityRole>().AddEntityFrameworkStores<MyDatabaseContext>().AddDefaultTokenProviders();
+
+
+            services.AddAuthorization(options =>
+            {
+                options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
+
+            services.ConfigureApplicationCookie(config =>
+            {
+                config.LoginPath = "/Login";
+                config.AccessDeniedPath = "/Login/AccessDenied";
+            });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,13 +84,15 @@ namespace DotNetCoreSqlDb
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Todos}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

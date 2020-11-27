@@ -1,0 +1,241 @@
+﻿@model IEnumerable<DotNetCoreSqlDb.Models.Inventory>
+
+@section Scripts
+{
+    <script>
+        $@*(document).ready(function () {
+            $('#inventory-table').DataTable();
+        });*@
+
+        $(document).ready(function () {
+            var table = $('#inventory-table').DataTable({
+                pageLength: 25,
+                @*columnDefs: [
+                    { orderable: false, targets: -1 },
+                    { className: 'noVis', targets: -1 }
+                ],*@
+                select: {
+                    style: 'single'
+                },
+                dom: 'Bflrtip',
+                buttons: [
+                    {
+                        text: 'Create',
+                        action: function () {
+                            window.location.href = '@Url.Action("Create", "Inventory")';
+                        }
+                    },
+                    {
+                        text: 'Edit',
+                        action: function () {
+                            @*tables.rows({selected: true}).data()*@
+                            var table = $('#inventory-table').DataTable();
+                            @*alert(table.rows('.selected').data()[0][3]);
+                            console.log(table.rows('.selected').data()[0][3]);
+                            alert('Button activated');*@
+                            @*window.location.href = '@Url.Action("SelectEdit", "Inventory")' + '/' + table.rows('.selected').data()[0][0];*@
+                            $.ajax({
+                                url: '@Url.Action("SelectEdit", "Inventory")',
+                                data: {
+                                    partName: table.rows('.selected').data()[0][0],
+                                },
+                                success: function (data) {
+                                    window.location = data.redirectUrl;
+                                }
+                            });
+                        }
+                    },
+                    {
+                        text: 'Details',
+                        action: function () {
+                            $.ajax({
+                                url: '@Url.Action("SelectDetails", "Inventory")',
+                                data: {
+                                    partName: table.rows('.selected').data()[0][0],
+                                },
+                                success: function (data) {
+                                    window.location = data.redirectUrl;
+                                }
+                            });
+                        }
+                    },
+                    {
+                        text: 'Delete',
+                        action: function () {
+                            $.ajax({
+                                url: '@Url.Action("SelectDelete", "Inventory")',
+                                data: {
+                                    partName: table.rows('.selected').data()[0][0],
+                                },
+                                success: function (data) {
+                                    window.location = data.redirectUrl;
+                                }
+                            });
+                        }
+                    }
+                ]
+            });
+
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [
+                    {
+                        extend: 'colvis', text: 'Select columns'
+                    }, 'excel', 'pdf',
+                ]
+            });
+
+            table.buttons(1, null).container().appendTo(
+                table.table().container()
+            );
+        });
+
+    </script>
+}
+
+<style>
+    .dataTables_length {
+        float: right !important;
+        margin-right: 20px !important;
+        margin-top: 2px !important;
+    }
+    .dataTables_filter {
+        float: right !important;
+    }
+    .dataTables_paginate {
+        float: none !important;
+    }
+    button.dt-button.active {
+        background: #00bfff !important;
+    }
+    .dt-button-collection {
+        top: -405px !important;
+    }
+</style>
+
+@{
+    ViewData["Title"] = "Inventory";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table" id="inventory-table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PartName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SKU)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MinimumQuantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Location)
+            </th>
+            @if (Context.User.IsInRole("Business"))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+            }
+
+            @*<th></th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            @if (Context.User.IsInRole("Business") || item.Status == Inventory.InventoryStatus.Approved)
+            {
+                string style = "";
+                if (item.Status == Inventory.InventoryStatus.Approved)
+                {
+                    style = "background-color:#44ff44";
+                }
+                else if (item.Status == Inventory.InventoryStatus.Submitted)
+                {
+                    style = "background-color:#ffff44";
+                }
+                else if (item.Status == Inventory.InventoryStatus.Rejected)
+                {
+                    style = "background-color:#ff4444";
+                }
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PartName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SKU)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PartType)
+                    </td>
+                    @{ 
+                        string suggestWarning = "";
+                        if ((Context.User.IsInRole("Admin") || Context.User.IsInRole("Business")) &&
+                            item.SuggestedQuantity != null && item.Quantity != item.SuggestedQuantity)
+                        {
+                            suggestWarning = "background-color:#ffa500";
+                        }
+                    }
+                    <td style="@suggestWarning">
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                        @{ 
+                            if (suggestWarning != "")
+                            {
+                                @("(")
+                                @Html.DisplayFor(modelItem => item.SuggestedQuantity)
+                                @(")")
+                            }
+                        }
+                    </td>
+                    @{ 
+                        string minWarning = "";
+                        if (item.Quantity < item.MinimumQuantity)
+                        {
+                            minWarning = "background-color:#00bfff";
+                        }
+                    }
+                    <td style="@minWarning">
+                        @Html.DisplayFor(modelItem => item.MinimumQuantity)
+                    </td>
+                    <td>
+                        $@Html.DisplayFor(modelItem => item.UnitCost)
+                    </td>
+                    <td>
+                        $@Html.DisplayFor(modelItem => item.TotalCost)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    @if (Context.User.IsInRole("Business"))
+                    {
+                        <td style="@style">
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                    }
+
+                    @*<td>
+                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>*@
+                </tr>
+            }
+
+        }
+    </tbody>
+</table>

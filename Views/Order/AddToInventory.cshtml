@@ -1,0 +1,114 @@
+﻿@model DotNetCoreSqlDb.Models.Order
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Inventory</h4>
+    <hr />
+    @if ((Order.OrderStatus)ViewData["status"] == Order.OrderStatus.Added)
+    {
+        <p style="color: red">Order has already been added to the inventory.</p>
+    }
+    @if ((Order.OrderStatus)ViewData["status"] != Order.OrderStatus.Received)
+    {
+        <p style="color: red">Order must be marked as received before it can be added to inventory.</p>
+    } else
+    {
+        <p>Are you sure you want to add @Html.DisplayFor(model => model.Quantity) of part @Html.DisplayFor(model => model.PartName) to the inventory?</p>
+    }
+    <dl class="row">
+        @*<dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Timestamp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Timestamp)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.OrderingStudent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrderingStudent)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RoboticsTeam)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RoboticsTeam)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Vendor)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Vendor)
+        </dd>*@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.PartName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PartName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SKU)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SKU)
+        </dd>
+        @*<dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Link)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Link)
+        </dd>*@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        @*<dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Justification)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Justification)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>*@
+    </dl>
+</div>
+<div>
+    <form asp-action="AddToInventory">
+        <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="Timestamp" />
+        <input type="hidden" asp-for="RoboticsTeam" />
+        <input type="hidden" asp-for="Vendor" />
+        <input type="hidden" asp-for="PartName" />
+        <input type="hidden" asp-for="SKU" />
+        <input type="hidden" asp-for="Link" />
+        <input type="hidden" asp-for="Quantity" />
+        <input type="hidden" asp-for="Price" />
+        <input type="hidden" asp-for="Justification" />
+        <input type="hidden" asp-for="Status" />
+        @if ((Order.OrderStatus)ViewData["status"] != Order.OrderStatus.Received)
+        {
+            <input type="submit" value="Add To Inventory" class="btn btn-primary" disabled/>
+        } else
+        {
+            <input type="submit" value="Add To Inventory" name="Add To Inventory" class="btn btn-primary" />
+        }
+        | <a asp-action="Index">Back to List</a>
+    </form>
+</div>

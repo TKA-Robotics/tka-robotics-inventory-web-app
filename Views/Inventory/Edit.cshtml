@@ -1,0 +1,102 @@
+﻿@model DotNetCoreSqlDb.Models.Inventory
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Inventory</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            @if ((Context.User.IsInRole("Business") && !Context.User.IsInRole("Admin")) &&
+            (Inventory.InventoryStatus)ViewData["status"] == Inventory.InventoryStatus.Approved)
+            {
+                <div class="form-group">
+                    <label asp-for="SuggestedQuantity" class="control-label"></label>
+                    <input asp-for="SuggestedQuantity" class="form-control" />
+                    <span asp-validation-for="SuggestedQuantity" class="text-danger"></span>
+                </div>
+
+                <input type="hidden" asp-for="PartName" />
+                <input type="hidden" asp-for="SKU" />
+                <input type="hidden" asp-for="PartType" />
+                <input type="hidden" asp-for="Quantity" />
+                <input type="hidden" asp-for="MinimumQuantity" />
+                <input type="hidden" asp-for="UnitCost" />
+                <input type="hidden" asp-for="Location" />
+                <input type="hidden" asp-for="Status" value="Approved" />
+            }
+            else
+            {
+
+                <input type="hidden" asp-for="SuggestedQuantity" />
+
+                <div class="form-group">
+                    <label asp-for="PartName" class="control-label"></label>
+                    <input asp-for="PartName" class="form-control" />
+                    <span asp-validation-for="PartName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SKU" class="control-label"></label>
+                    <input asp-for="SKU" class="form-control" />
+                    <span asp-validation-for="SKU" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PartType" class="control-label"></label>
+                    <input asp-for="PartType" class="form-control" />
+                    <span asp-validation-for="PartType" class="text-danger"></span>
+                </div>
+                @if (Context.User.IsInRole("Admin") && (ViewData["suggestedQuantity"] != null && (int)ViewData["quantity"] != (int)ViewData["suggestedQuantity"]) &&
+                (Inventory.InventoryStatus)ViewData["status"] == Inventory.InventoryStatus.Approved)
+                {
+                    <p style="background-color:#ffa500">Suggested quantity: @ViewData["suggestedQuantity"]</p>
+                }
+                <div class="form-group">
+                    <label asp-for="Quantity" class="control-label"></label>
+                    <input asp-for="Quantity" class="form-control" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="MinimumQuantity" class="control-label"></label>
+                    <input asp-for="MinimumQuantity" class="form-control" />
+                    <span asp-validation-for="MinimumQuantity" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UnitCost" class="control-label"></label>
+                    <input asp-for="UnitCost" class="form-control" />
+                    <span asp-validation-for="UnitCost" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Location" class="control-label"></label>
+                    <input asp-for="Location" class="form-control" />
+                    <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+                @if (Context.User.IsInRole("Admin") && (Inventory.InventoryStatus)ViewData["status"] == Inventory.InventoryStatus.Submitted)
+                {
+                    <div class="form-group radio-approve-reject">
+                        <label style="background-color: #71ff35; padding: 15px; border-radius: 15px"><input asp-for="Status" value="Approved" type="radio" /><span style="margin-left: 10px">Approve</span></label><br />
+                        <label style="background-color: #ff2929; padding: 15px; border-radius: 15px"><input asp-for="Status" value="Rejected" type="radio" /><span style="margin-left: 10px">Reject</span></label>
+                    </div>
+                }
+            }
+
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
