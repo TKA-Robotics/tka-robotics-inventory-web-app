@@ -35,7 +35,7 @@ namespace DotNetCoreSqlDb
             // new password: TKA_R0bot1c$_db
 
             services.AddDbContext<MyDatabaseContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("MyDbConnection")));
+            options.UseSqlServer("Server=tcp:robotdbtestserver.database.windows.net,1433;Database=coreDB;User ID=jatler;Password=TKA_R0bot1c$_db;Encrypt=true;Connection Timeout=30"));
 
             services.AddIdentity<IdentityUser, IdentityRole>(config =>
             {
