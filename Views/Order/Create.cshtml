@@ -62,20 +62,25 @@
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Barcode" class="control-label"></label>
+                <input asp-for="Barcode" class="form-control" />
+                <span asp-validation-for="Barcode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Justification" class="control-label"></label>
                 <input asp-for="Justification" class="form-control" />
                 <span asp-validation-for="Justification" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <br />
-                <select asp-for="Status">
-                    <option value="Requested">Requested</option>
-                    <option value="Ordered">Ordered</option>
-                    <option value="Received">Received</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>*@
+            <label asp-for="Status" class="control-label"></label>
+            <br />
+            <select asp-for="Status">
+                <option value="Requested">Requested</option>
+                <option value="Ordered">Ordered</option>
+                <option value="Received">Received</option>
+            </select>
+            <span asp-validation-for="Status" class="text-danger"></span>
+        </div>*@
             <input type="hidden" asp-for="Status" value="@Order.OrderStatus.Requested" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

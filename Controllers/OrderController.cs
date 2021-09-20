@@ -83,7 +83,7 @@ namespace DotNetCoreSqlDb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Team")]
-        public async Task<IActionResult> Create([Bind("ID,Timestamp,OrderingStudent,RoboticsTeam,Vendor,PartName,SKU,Link,Quantity,Price,Justification,Status")] Order order)
+        public async Task<IActionResult> Create([Bind("ID,Timestamp,OrderingStudent,RoboticsTeam,Vendor,PartName,SKU,Link,Quantity,Price,Barcode,Justification,Status")] Order order)
         {
             if (ModelState.IsValid)
             {
@@ -285,7 +285,7 @@ namespace DotNetCoreSqlDb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Business")]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Timestamp,OrderingStudent,RoboticsTeam,Vendor,PartName,SKU,Link,Quantity,Price,Justification,Status")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Timestamp,OrderingStudent,RoboticsTeam,Vendor,PartName,SKU,Link,Quantity,Price,Barcode,Justification,Status")] Order order)
         {
             Console.WriteLine("Order edit");
 

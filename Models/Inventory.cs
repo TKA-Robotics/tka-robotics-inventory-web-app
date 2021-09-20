@@ -32,6 +32,8 @@ namespace DotNetCoreSqlDb.Models
 
         public string Location { get; set; }
 
+        public string Barcode { get; set; }
+
         public InventoryStatus Status { get; set; }
 
 

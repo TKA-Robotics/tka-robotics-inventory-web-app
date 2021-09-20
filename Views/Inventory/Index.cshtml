@@ -60,6 +60,12 @@
                         }
                     },
                     {
+                        text: 'Barcode',
+                        action: function () {
+                            window.location.href = '@Url.Action("Barcode", "Inventory")';
+                        }
+                    },
+                    {
                         text: 'Delete',
                         action: function () {
                             $.ajax({
@@ -145,6 +151,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Location)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Barcode)
+            </th>
             @if (Context.User.IsInRole("Business"))
             {
                 <th>
@@ -220,6 +229,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Barcode)
                     </td>
                     @if (Context.User.IsInRole("Business"))
                     {

@@ -82,8 +82,10 @@ namespace DotNetCoreSqlDb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Business")]
-        public async Task<IActionResult> Create([Bind("ID,PartName,PartType,SKU,Quantity,SuggestedQuantity,MinimumQuantity,UnitCost,Location,Status")] Inventory inventory)
+        public async Task<IActionResult> Create([Bind("ID,PartName,PartType,SKU,Quantity,SuggestedQuantity,MinimumQuantity,UnitCost,Location,Barcode,Status")] Inventory inventory)
         {
+            Console.WriteLine(inventory.ID);
+
             if (ModelState.IsValid)
             {
                 if(HttpContext.User.IsInRole("Admin"))
@@ -162,7 +164,7 @@ namespace DotNetCoreSqlDb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Business")]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,PartName,PartType,SKU,Quantity,SuggestedQuantity,MinimumQuantity,UnitCost,Location,Status")] Inventory inventory)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,PartName,PartType,SKU,Quantity,SuggestedQuantity,MinimumQuantity,UnitCost,Location,Barcode,Status")] Inventory inventory)
         {
             Console.WriteLine("Inventory edit");
 
@@ -325,6 +327,95 @@ namespace DotNetCoreSqlDb.Controllers
             Console.WriteLine("done");
 
             return partID;
+        }
+
+        public int queryForBarcode(string barcode)
+        {
+            int partID = -1;
+
+            try
+            {
+                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+
+                builder.DataSource = "tkainventoryserver.database.windows.net";
+                builder.UserID = "tka";
+                builder.Password = "M1dKnightRobotic$";
+                builder.InitialCatalog = "coredb";
+
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+                    String sql = String.Format("SELECT id FROM [dbo].[Inventory] WHERE barcode = '{0}'", barcode);
+
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                Console.WriteLine("reading");
+                                partID = reader.GetInt32(0);
+                                Console.WriteLine(partID);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (SqlException e)
+            {
+                Console.WriteLine("SQL Exception");
+                Console.WriteLine(e.ToString());
+            }
+
+            Console.WriteLine("done");
+
+            return partID;
+        }
+
+        // GET: Inventory/Barcode
+        [Authorize(Roles = "Business")]
+        public IActionResult Barcode()
+        {
+            Console.WriteLine("Barcode");
+
+            return View();
+        }
+
+        // POST: Inventory/Barcode
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Business")]
+        public async Task<IActionResult> Barcode(int id, [Bind("ID,Barcode")] Inventory inventory)
+        {
+            Console.WriteLine("BARCODE");
+            Console.WriteLine(id);
+            Console.WriteLine(inventory.ID);
+            Console.WriteLine(inventory.Barcode);
+
+            int partID = queryForBarcode(inventory.Barcode);
+            Console.WriteLine(partID);
+
+            if (partID != -1)
+            {
+                ViewData["barcodeStatus"] = "found";
+                return RedirectToAction("Details", "Inventory", new { id = partID });
+
+                /*
+                var redirect = Url.Action("Details", "Inventory", new { id = partID });
+
+                return Json(new
+                {
+                    redirectUrl = redirect
+                });
+                */
+            } else
+            {
+                ViewData["barcodeStatus"] = "missing";
+            }
+
+            return View(inventory);
         }
     }
 }

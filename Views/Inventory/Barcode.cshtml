@@ -1,0 +1,38 @@
+﻿@model DotNetCoreSqlDb.Models.Inventory
+
+@{
+    ViewData["Title"] = "Barcode";
+}
+
+<h1>Barcode</h1>
+<h2>Search for part by barcode text</h2>
+
+<h4>Inventory</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Barcode">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Barcode" class="control-label"></label>
+                <input asp-for="Barcode" class="form-control" />
+                <span asp-validation-for="Barcode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Barcode" class="btn btn-primary" />
+            </div>
+            @if ((String)ViewData["barcodeStatus"] == "missing")
+            {
+                <p style="color: red">Barcode not found.</p>
+            }
+            </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

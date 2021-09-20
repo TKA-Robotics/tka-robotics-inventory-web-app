@@ -14,7 +14,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             @if ((Context.User.IsInRole("Business") && !Context.User.IsInRole("Admin")) &&
-            (Inventory.InventoryStatus)ViewData["status"] == Inventory.InventoryStatus.Approved)
+           (Inventory.InventoryStatus)ViewData["status"] == Inventory.InventoryStatus.Approved)
             {
                 <div class="form-group">
                     <label asp-for="SuggestedQuantity" class="control-label"></label>
@@ -52,7 +52,7 @@
                     <span asp-validation-for="PartType" class="text-danger"></span>
                 </div>
                 @if (Context.User.IsInRole("Admin") && (ViewData["suggestedQuantity"] != null && (int)ViewData["quantity"] != (int)ViewData["suggestedQuantity"]) &&
-                (Inventory.InventoryStatus)ViewData["status"] == Inventory.InventoryStatus.Approved)
+               (Inventory.InventoryStatus)ViewData["status"] == Inventory.InventoryStatus.Approved)
                 {
                     <p style="background-color:#ffa500">Suggested quantity: @ViewData["suggestedQuantity"]</p>
                 }
@@ -75,6 +75,11 @@
                     <label asp-for="Location" class="control-label"></label>
                     <input asp-for="Location" class="form-control" />
                     <span asp-validation-for="Location" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Barcode" class="control-label"></label>
+                    <input asp-for="Barcode" class="form-control" />
+                    <span asp-validation-for="Barcode" class="text-danger"></span>
                 </div>
                 @if (Context.User.IsInRole("Admin") && (Inventory.InventoryStatus)ViewData["status"] == Inventory.InventoryStatus.Submitted)
                 {
