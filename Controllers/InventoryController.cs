@@ -67,6 +67,60 @@ namespace DotNetCoreSqlDb.Controllers
             return View(inventory);
         }
 
+        // GET: Inventory/Details/5
+        [Authorize(Roles = "Team")]
+        public async Task<IActionResult> BarcodeEdit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var inventory = await _context.Inventory
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (inventory == null)
+            {
+                return NotFound();
+            }
+
+            Console.WriteLine("barcode edit 1");
+            //Console.WriteLine(inventory.Quantity);
+
+            return View(inventory);
+        }
+
+        // GET: Inventory/Details/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Team")]
+        public async Task<IActionResult> BarcodeEdit(int id, [Bind("ID,PartName,PartType,SKU,Quantity,SuggestedQuantity,MinimumQuantity,UnitCost,Location,Barcode,Status")] Inventory inventory)
+        {
+            /*if (id == null)
+            {
+                return NotFound();
+            }
+
+            var inventory = await _context.Inventory
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (inventory == null)
+            {
+                return NotFound();
+            }*/
+
+            Console.WriteLine("barcode edit 2");
+            Console.WriteLine(id);
+            Console.WriteLine(inventory.ID);
+            Console.WriteLine(inventory.Quantity);
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(inventory);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
         // GET: Inventory/Create
         [Authorize(Roles = "Business")]
         public IActionResult Create()
@@ -400,7 +454,9 @@ namespace DotNetCoreSqlDb.Controllers
             if (partID != -1)
             {
                 ViewData["barcodeStatus"] = "found";
-                return RedirectToAction("Details", "Inventory", new { id = partID });
+                //return RedirectToAction("Details", "Inventory", new { id = PartID });
+                Console.WriteLine("go to BarcodeEdit");
+                return RedirectToAction("BarcodeEdit", "Inventory", new { id = partID });
 
                 /*
                 var redirect = Url.Action("Details", "Inventory", new { id = partID });
@@ -410,7 +466,8 @@ namespace DotNetCoreSqlDb.Controllers
                     redirectUrl = redirect
                 });
                 */
-            } else
+            }
+            else
             {
                 ViewData["barcodeStatus"] = "missing";
             }

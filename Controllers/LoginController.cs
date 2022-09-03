@@ -89,31 +89,41 @@ namespace DotNetCoreSqlDb.Controllers
 
             if (user != null)
             {
-                var signInResult = await _signInManager.PasswordSignInAsync(usertype, password, false, false);
-
-                if (signInResult.Succeeded)
+                if (password != null)
                 {
+                    var signInResult = await _signInManager.PasswordSignInAsync(usertype, password, false, false);
 
-                    // EDIT PASSWORD
-
-                    /*var newPassword = "myNewPassword";
-                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    await _userManager.ResetPasswordAsync(user, token, "AdminPassword");*/
-                    TempData["login"] = "success";
-                    Console.WriteLine("Sign in succeeded");
-                    Console.WriteLine("Return Url");
-                    Console.WriteLine(returnUrl);
-
-
-                    if (!string.IsNullOrEmpty(returnUrl))
+                    if (signInResult.Succeeded)
                     {
-                        return Redirect(returnUrl);
+
+                        // EDIT PASSWORD
+
+                        /*var newPassword = "myNewPassword";
+                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                        await _userManager.ResetPasswordAsync(user, token, "AdminPassword");*/
+                        TempData["login"] = "success";
+                        Console.WriteLine("Sign in succeeded");
+                        Console.WriteLine("Return Url");
+                        Console.WriteLine(returnUrl);
+
+
+                        if (!string.IsNullOrEmpty(returnUrl))
+                        {
+                            return Redirect(returnUrl);
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
+
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Home");
+                        TempData["login"] = "fail";
+                        Console.WriteLine(TempData["login"]);
+                        Console.WriteLine("Sign in failed");
+                        return RedirectToAction("Index", "Login");
                     }
-
                 }
                 else
                 {

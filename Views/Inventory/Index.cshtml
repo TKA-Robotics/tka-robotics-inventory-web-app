@@ -154,7 +154,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Barcode)
             </th>
-            @if (Context.User.IsInRole("Business"))
+            @if (Context.User.IsInRole("Admin"))
             {
                 <th>
                     @Html.DisplayNameFor(model => model.Status)
@@ -233,7 +233,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Barcode)
                     </td>
-                    @if (Context.User.IsInRole("Business"))
+                    @if (Context.User.IsInRole("Admin"))
                     {
                         <td style="@style">
                             @Html.DisplayFor(modelItem => item.Status)
