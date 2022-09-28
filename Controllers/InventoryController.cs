@@ -253,10 +253,10 @@ namespace DotNetCoreSqlDb.Controllers
                     inventory.Status = Inventory.InventoryStatus.Approved;
                 }
 
-                if (HttpContext.User.IsInRole("Admin"))
-                {
-                    inventory.SuggestedQuantity = null;
-                }
+                //if (HttpContext.User.IsInRole("Admin"))
+                //{
+                //    inventory.SuggestedQuantity = null;
+                //}
                 
 
                 try

@@ -23,23 +23,23 @@ namespace DotNetCoreSqlDb.Controllers
             _roleManager = roleManager;
 
 
-            // InitializeUsers();
+            //InitializeUsers();
         }
 
-        /*public async Task InitializeUsers()
+        public async Task InitializeUsers()
         {
-            var adminUser = new IdentityUser
-            {
-                UserName = "admin"
-            };
-            await _userManager.CreateAsync(adminUser, "AdminPassw0rd!");
+            //var projectUser = new IdentityUser
+            //{
+            //    UserName = "ProjectLeader"
+            //};
+            //await _userManager.CreateAsync(projectUser, "ProjectPassword");
 
-            var studentUser = new IdentityUser
-            {
-                UserName = "student"
-            };
-            await _userManager.CreateAsync(studentUser, "StudentPassw0rd!");
-        }*/
+            //var studentUser = new IdentityUser
+            //{
+            //    UserName = "student"
+            //};
+            //await _userManager.CreateAsync(studentUser, "StudentPassw0rd!");
+        }
 
 
         public IActionResult Index()
@@ -54,35 +54,39 @@ namespace DotNetCoreSqlDb.Controllers
             //await _roleManager.CreateAsync(new IdentityRole("Business"));
             //await _roleManager.CreateAsync(new IdentityRole("Team"));
 
+            //await _roleManager.CreateAsync(new IdentityRole("Project"));
+
+
 
             Console.WriteLine("usertype");
             Console.WriteLine(usertype);
             Console.WriteLine(password);
 
 
-            /*var user = new IdentityUser
-            {
-                UserName = usertype,
-            };
+            //var user = new IdentityUser
+            //{
+            //    UserName = usertype,
+            //};
 
-            var result = await _userManager.CreateAsync(user, password);
-            await _userManager.AddToRolesAsync(user, new List<string>{"Team", "Business", "Admin"});
+            //var result = await _userManager.CreateAsync(user, password);
+            //await _userManager.AddToRolesAsync(user, new List<string> { "Project" });
+            //await _userManager.AddToRolesAsync(user, new List<string> { "Team", "Business", "Project" });
+            ////await _userManager.AddToRolesAsync(user, new List<string> { "Team", "Business", "Admin" });
 
-            if (result.Succeeded)
-            {
-                var signInResult = await _signInManager.PasswordSignInAsync(user, password, false, false);
+            //if (result.Succeeded)
+            //{
+            //    var signInResult = await _signInManager.PasswordSignInAsync(user, password, false, false);
 
 
-                if (signInResult.Succeeded)
-                {
-                    Console.WriteLine("Account created");
-                    return RedirectToAction("Index", "Inventory");
-                }
+            //    if (signInResult.Succeeded)
+            //    {
+            //        Console.WriteLine("Account created");
+            //        return RedirectToAction("Index", "Inventory");
+            //    }
 
-            }
+            //}
 
-            return RedirectToAction("Index");*/
-
+            //return RedirectToAction("Index");
 
 
             var user = await _userManager.FindByNameAsync(usertype);

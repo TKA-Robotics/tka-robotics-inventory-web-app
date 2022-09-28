@@ -154,7 +154,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Barcode)
             </th>
-            @if (Context.User.IsInRole("Admin"))
+            @if (Context.User.IsInRole("Project"))
             {
                 <th>
                     @Html.DisplayNameFor(model => model.Status)
@@ -167,7 +167,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            @if (Context.User.IsInRole("Business") || item.Status == Inventory.InventoryStatus.Approved)
+            @if (Context.User.IsInRole("Project") || item.Status == Inventory.InventoryStatus.Approved)
             {
                 string style = "";
                 if (item.Status == Inventory.InventoryStatus.Approved)
@@ -194,7 +194,7 @@
                     </td>
                     @{ 
                         string suggestWarning = "";
-                        if ((Context.User.IsInRole("Admin") || Context.User.IsInRole("Business")) &&
+                        if (Context.User.IsInRole("Business") &&
                             item.SuggestedQuantity != null && item.Quantity != item.SuggestedQuantity)
                         {
                             suggestWarning = "background-color:#ffa500";
@@ -233,7 +233,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Barcode)
                     </td>
-                    @if (Context.User.IsInRole("Admin"))
+                    @if (Context.User.IsInRole("Project"))
                     {
                         <td style="@style">
                             @Html.DisplayFor(modelItem => item.Status)
